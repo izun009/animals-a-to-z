@@ -1,10 +1,20 @@
-import scrapy
+import scrapy, logging
+from scrapy.utils.log import configure_logging 
+
+# Items
 from animals_a_to_z.items import AnimalsAToZItem
 
 class AnimalsSpider(scrapy.Spider):
     name = "animals"
     allowed_domains = ["a-z-animals.com"]
-    start_urls = ["https://a-z-animals.com/animals/"]
+    start_urls = ["https://a-z-animals.com/"]
+
+    configure_logging(install_root_handler=False)
+    logging.basicConfig(
+        filename='logs/animals.log',
+        format='%(levelname)s: %(message)s',
+        level=logging.INFO
+    )
 
     def parse(self, response):
         # for item in response.css('li.list-item'):
