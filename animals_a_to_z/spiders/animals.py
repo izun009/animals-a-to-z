@@ -17,10 +17,6 @@ class AnimalsSpider(scrapy.Spider):
     )
 
     def parse(self, response):
-        # for item in response.css('li.list-item'):
-        #     url = item.css('a::attr(href)').get()
-        #     print(url)
-        #     yield response.follow(url, self.parse_animals)
         animals = response.css('li.list-item.col-md-4.col-sm-6 a::attr(href)')
         for anim in animals:
             yield response.follow(anim, self.parse_animals)
@@ -29,8 +25,41 @@ class AnimalsSpider(scrapy.Spider):
         item_anim = AnimalsAToZItem()
 
         item_anim['name'] = response.css('h1.has-text-align-center.has-custom-size.text-white::text').get()
-        item_anim['facts'] = response.css('h2[id^="h-"]::text').getall()
-        # item_anim['facts'] = response.css('h2[id^="h-"]::attr(id)').getall()
+        # item_anim['facts'] = response.css('h2[id^="h-"]::text').getall()
+
+        # Pake yang ini
+        facts_list = []
+        h2_facts = response.css('h2[id^="h-"]')
+        for h2 in h2_facts:
+            fact_dict = {}
+            fact_dict['fact'] = h2.css('::text').get()
+            fact_dict['desc'] = h2.xpath('following-sibling::p[1]').xpath('normalize-space(string())').get() # hilanging link di paragraf
+            # fact_dict['desc'] = h2.xpath('following-sibling::p[1]/text()').get()
+            facts_list.append(fact_dict)
+
+        item_anim['facts'] = facts_list
+
+        # Desc nyatu sama judul (gabung)
+        # h2_facts = response.css('h2[id^="h-"]')
+        # facts_list = []
+        # for h2 in h2_facts:
+        #     fact = h2.css('::text').get()
+        #     desc = h2.xpath('following-sibling::p[1]/text()').get()
+        #     facts_list.append({fact: desc})
+        # item_anim['facts'] = facts_list
+
+        # Desc pisah sama judul
+        # facts_arr = []
+        # desc_arr = []
+        # h2_facts = response.css('h2[id^="h-"]')
+        # for h2 in h2_facts:
+        #     fact = h2.css('::text').get()
+        #     desc = h2.xpath('following-sibling::p[1]/text()').get()
+        #     facts_arr.append(fact)
+        #     desc_arr.append(desc)
+        # item_anim['facts'] = facts_arr
+        # item_anim['facts_desc'] = desc_arr
+
 
         # anim_image_url = response.css('figure.wp-block-image.size-large img::attr(src)').get()
         # if anim_image_url:
