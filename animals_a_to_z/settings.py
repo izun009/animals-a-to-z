@@ -60,13 +60,23 @@ CONCURRENT_REQUESTS = 1
 #    "scrapy.extensions.telnet.TelnetConsole": None,
 #}
 
+# MONGO_URI = 'mongodb://localhost:27017/'
+# MONGO_DATABASE = 'animals'
+
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-# ITEM_PIPELINES = {
-#    "animals_a_to_z.pipelines.AnimalsAToZPipeline": 1,
-# }
+ITEM_PIPELINES = {
+   #"animals_a_to_z.pipelines.AnimalsAToZPipeline": 1,
+   "animals_a_to_z.pipelines.MySqlPipeline": 300,
+}
+MYSQL_USER = 'izzen'
+MYSQL_PASSWORD = '1234'
+MYSQL_HOST = 'localhost'
+MYSQL_PORT = 3306
+MYSQL_DB = 'animals_a_to_z'
 
 # IMAGES_STORE = 'images'
+CLOSESPIDER_ITEMCOUNT = 5
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
@@ -93,3 +103,4 @@ CONCURRENT_REQUESTS = 1
 REQUEST_FINGERPRINTER_IMPLEMENTATION = "2.7"
 TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
 FEED_EXPORT_ENCODING = "utf-8"
+
